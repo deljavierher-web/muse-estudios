@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+config.json
+config.local.json
+campus_tasks_state.json
+campus_tasks_state.json.tmp
+*.ics

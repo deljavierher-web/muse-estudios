@@ -1,0 +1,17 @@
+{
+  "timezone": "Europe/Madrid",
+  "feeds": [
+    {
+      "id": "universidad",
+      "name": "Universidad",
+      "url": "",
+      "enabled": true
+    },
+    {
+      "id": "grado-superior",
+      "name": "Grado superior",
+      "url": "",
+      "enabled": true
+    }
+  ]
+}

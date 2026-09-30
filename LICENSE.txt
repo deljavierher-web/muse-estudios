@@ -1,0 +1,5 @@
+Copyright (c) 2026 Javier Delgado Hernández. All rights reserved.
+
+Each person individually invited by the owner is granted a limited, revocable, non-exclusive, non-transferable permission to inspect and use this material for their own personal, non-commercial educational purposes. A recipient may keep a private working copy solely for that use. No redistribution, public rehosting, sublicensing, resale, paid access, or other commercial use is permitted without the owner's prior written permission.
+
+Do not forward the repository invitation or link to another person. This notice expresses the owner's intended terms; it is not legal advice and does not technically prevent an authorized recipient from copying material already received. Access to the private repository can be revoked, but downloaded copies cannot be remotely erased.
