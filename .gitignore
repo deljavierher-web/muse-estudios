@@ -5,6 +5,9 @@ __pycache__/
 .env.*
 config.json
 config.local.json
-campus_tasks_state.json
-campus_tasks_state.json.tmp
+*creds*.json
+!*example.json
+*state*.json
+*state*.json.tmp
+*cache*.json
 *.ics

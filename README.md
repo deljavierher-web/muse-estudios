@@ -1,8 +1,8 @@
-# Muse Estudios — Paquete Privado de Asistencia Académica para Meta Muse
+# Muse Estudios — Paquete de Asistencia Académica y Automatización Moodle
 
-Paquete diseñado para compartir mediante invitación individual una adaptación segura, privada y reutilizable de las alertas y asistencia académica universitaria o de formación profesional para **Meta Muse**.
+Paquete diseñado para adaptar de forma segura, privada y reutilizable las automatizaciones académicas universitarias y de formación profesional (Moodle UVA y Educacyl) para **Meta Muse** y ejecución local.
 
-**Cero Credenciales:** No contiene datos personales, cursos ni credenciales de Javier.
+**Cero Credenciales:** No contiene datos personales, calificaciones, cursos fijos ni credenciales de Javier.
 
 ---
 
@@ -12,13 +12,18 @@ Paquete diseñado para compartir mediante invitación individual una adaptación
 muse-estudios/
 ├── LICENSE.txt                     # Licencia de uso personal educativo no comercial
 ├── README.md                       # Documentación principal del repositorio
-├── config.example.json             # Plantilla vacía para ejecución local CLI
-├── campus_tasks.py                 # Parser CLI independiente (Python estándar)
+├── moodle_cli.py                   # CLI completo de conexión con Moodle (UVa + Educacyl)
+├── moodle_manager.py               # Motor genérico de autenticación SAML/ADFS y scraping
+├── moodle_creds.example.json       # Plantilla de credenciales para Moodle
+├── campus_tasks.py                 # Parser CLI de iCalendar (Python estándar)
+├── config.example.json             # Plantilla vacía para feeds iCalendar
 ├── docs/
 │   ├── PLAN_MUSE_COMPLETO.md       # Auditoría técnica y plan maestro de arquitectura
+│   ├── ARQUITECTURA_COMERCIAL_Y_PROTECCION.md # Modelo de protección y hoja de ruta SaaS
 │   └── GUIA_CONEXION_CAMPUS.md     # Guía visual para conectar Moodle con Google Calendar
 ├── muse/
-│   ├── INSTRUCCIONES_MUSE.md       # Prompt principal para configurar Meta Muse en el móvil
+│   ├── LAUNCHER_PROMPT.md          # Prompt único para activar el Asistente en Meta Muse
+│   ├── INSTRUCCIONES_MUSE.md       # Prompt extendido con motor proactivo de tareas
 │   ├── GUIA_USUARIO_MOVIL.md       # Guía rápida de 3 pasos para el alumno
 │   ├── SKILL.md                    # Especificación técnica base del asistente
 │   └── modulos/
@@ -31,50 +36,43 @@ muse-estudios/
 
 ---
 
-## 📱 Uso Rápido en Móvil (Meta Muse)
+## 🚀 Opciones de Uso
 
-Para configurar tu asistente en Meta Muse sin usar terminal ni editar archivos:
+### Opción 1: En Meta Muse Móvil (Vía Prompt)
+Pega el bloque de [`muse/LAUNCHER_PROMPT.md`](muse/LAUNCHER_PROMPT.md) en un chat nuevo de Meta Muse en tu móvil. El asistente te pedirá tu clave de activación, se conectará a tu calendario y te ofrecerá resolver tus prácticas de forma proactiva.
 
-1. **Sincroniza tu calendario de clase:** Sigue [`docs/GUIA_CONEXION_CAMPUS.md`](docs/GUIA_CONEXION_CAMPUS.md) para añadir tu feed de Moodle a Google Calendar o Microsoft Outlook.
-2. **Conecta tu calendario a Muse:** En la app de Meta Muse, activa el conector oficial de **Google Calendar** (o Outlook) en modo lectura.
-3. **Inicia el asistente:** Sigue [`muse/GUIA_USUARIO_MOVIL.md`](muse/GUIA_USUARIO_MOVIL.md) y envía a Muse el contenido de [`muse/INSTRUCCIONES_MUSE.md`](muse/INSTRUCCIONES_MUSE.md). Responde a las 4 preguntas breves de bienvenida y tu tutor estará listo.
-
----
-
-## 💻 Uso Local del CLI (Opcional, en tu Ordenador)
-
-Si prefieres ejecutar el seguimiento desde tu propia terminal fuera de Muse:
-
-1. Copia `config.example.json` como `config.json`.
-2. Añade tus enlaces HTTPS de calendario en `config.json`.
-3. Comprueba y ejecuta:
+### Opción 2: Motor Completo de Moodle CLI (Tareas, Notas, PDFs y Apuntes)
+Si quieres interactuar directamente con Moodle (UVa o Educacyl) como en Hermes:
+1. Copia `moodle_creds.example.json` como `moodle_creds.json`:
    ```bash
-   python3 campus_tasks.py --list    # Lista todas las tareas futuras
-   python3 campus_tasks.py --check   # Comprueba alertas (silencio si no hay novedades)
-   python3 campus_tasks.py --json    # Emite tareas en JSON limpio sin URLs
+   cp moodle_creds.example.json moodle_creds.json
+   ```
+2. Rellena tu usuario y contraseña institucional en `moodle_creds.json` (el archivo está ignorado en git por seguridad).
+3. Ejecuta los comandos:
+   ```bash
+   python3 moodle_cli.py tasks            # Lista tareas y plazos de entrega
+   python3 moodle_cli.py grades           # Consulta calificaciones de tus asignaturas
+   python3 moodle_cli.py task-detail 1234 # Extrae enunciado y texto de PDFs de la tarea
+   python3 moodle_cli.py forums           # Revisa comunicados docentes en foros
+   python3 moodle_cli.py sync-resources   # Escanea y descarga apuntes organizados a disco
    ```
 
-El archivo `config.json` se protege automáticamente con permisos `0600` (solo legible por tu usuario) y está ignorado en `.gitignore`.
+### Opción 3: Vigilante Ligero de Calendario (iCalendar)
+```bash
+python3 campus_tasks.py --list    # Lista todas las tareas futuras del calendario
+python3 campus_tasks.py --check   # Comprueba alertas silenciosas (7d, 3d, 1d)
+python3 campus_tasks.py --json    # Emite tareas en JSON limpio sin URLs
+```
 
 ---
 
-## 🛡️ Seguridad y Privacidad
+## 🛡️ Seguridad y Verificación Continua
 
-* **Nunca pegues contraseñas ni URLs con tokens en el chat:** Los enlaces iCalendar contienen un `authtoken` privado. Al sincronizar a través de Google Calendar y usar el conector de Muse, la IA solo lee eventos limpios sin tocar tus claves.
-* **Protección contra Inyección de Prompts:** Las descripciones de tareas y los archivos PDF subidos se tratan estrictamente como datos pasivos, neutralizando cualquier intento de alterar las instrucciones del asistente.
-* **Validación Continua:** El repositorio cuenta con una suite de pruebas que verifica la sanitización de URLs y la ausencia de datos privados:
+* **Protección de Datos:** Las credenciales y estados locales nunca se suben al repositorio (`.gitignore`).
+* **Suite de Sanitización:** Todo el repositorio se escanea continuamente para asegurar que ninguna clave, token ni ruta privada quede expuesta:
   ```bash
   python3 -m unittest discover tests -v
   ```
-
----
-
-## 🔒 Compartir sin Publicarlo
-
-El repositorio debe mantenerse **estrictamente privado**. Invita a cada amigo con acceso de solo lectura individual a través de su usuario de GitHub.
-
-> [!WARNING]
-> La licencia [`LICENSE.txt`](LICENSE.txt) expresa los términos legales de uso personal y prohíbe la redistribución o venta. No obstante, ten en cuenta que ninguna medida técnica puede impedir que una persona autorizada copie o reenvíe material que ya haya recibido en su dispositivo.
 
 ---
 

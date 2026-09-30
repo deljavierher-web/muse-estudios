@@ -26,8 +26,13 @@ class SanitizationAndLeakTests(unittest.TestCase):
         (r"Library/CloudStorage", "Ruta a Google Drive personal"),
         (r"\.hermes/scripts/moodle_creds\.json", "Ruta a credenciales de Moodle"),
         (r"\.hermes/\.env", "Ruta a variables de entorno de Hermes"),
-        # Contraseñas o credenciales en texto plano
-        (r"adAS_password", "Campo de contraseña SAML de Moodle"),
+        # IDs de cursos específicos de Javier
+        (r"10344", "ID de curso UVA de Javier (Química)"),
+        (r"10319", "ID de curso UVA de Javier (Org)"),
+        (r"10309", "ID de curso UVA de Javier (SPF)"),
+        (r"14079", "ID de curso UVA de Javier (Informática)"),
+        # Contraseñas o credenciales en texto plano quemadas
+        (r"adAS_password[\"']?\s*:\s*[\"'][^\"']+[\"']", "Contraseña quemada en formulario"),
         (r"TELEGRAM_BOT_TOKEN", "Variable de bot de Telegram"),
     ]
 

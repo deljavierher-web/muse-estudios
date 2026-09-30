@@ -200,7 +200,7 @@ Para garantizar la seguridad y privacidad del usuario, el comportamiento del age
 * **Control:** `muse/SKILL.md` incluye la directiva expresa de **Contenido No Confiable** (`L34-37`): Todos los textos procedentes del calendario o PDFs adjuntos se tratan como datos pasivos, nunca como instrucciones ejecutables. Muse solo tiene permitido extraer campos: Asignatura, Título y Fecha límite.
 
 ### 7.3. Amenaza 3: Reutilización Inadvertida de Secretos de Javier
-* **Vector:** Copiar accidentalmente `uva_tareas.py` o fragmentos de `moodle_manager.py` arrastrando tokens de Javier (`authtoken=01d5b...`, rutas a su Google Drive personal, IDs de cursos UVA como `10344`).
+* **Vector:** Copiar accidentalmente `uva_tareas.py` o fragmentos de `moodle_manager.py` arrastrando tokens de Javier (`authtoken=01d5b...`, rutas a su Google Drive personal, IDs de cursos institucionales).
 * **Control:** Regla de cero copia de código legado. El paquete de Muse se construye de forma desacoplada y genérica. Se implementará una prueba de sanitización automatizada en `tests/` que falle si detecta identificadores, rutas personales o patrones de token.
 
 ---
