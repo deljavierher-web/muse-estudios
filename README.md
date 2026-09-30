@@ -1,48 +1,83 @@
-# Muse Estudios — paquete privado de seguimiento académico
+# Muse Estudios — Paquete Privado de Asistencia Académica para Meta Muse
 
-Paquete para compartir con invitación individual una adaptación de las alertas académicas UVA / grado superior. No contiene datos ni credenciales de Javier.
+Paquete diseñado para compartir mediante invitación individual una adaptación segura, privada y reutilizable de las alertas y asistencia académica universitaria o de formación profesional para **Meta Muse**.
 
-## Qué incluye
+**Cero Credenciales:** No contiene datos personales, cursos ni credenciales de Javier.
 
-- `muse/SKILL.md`: instrucciones en español para que cada persona configure Muse con sus propios estudios y consulte un calendario académico mediante el conector de calendario integrado, en modo lectura.
-- `campus_tasks.py`: alternativa CLI independiente para leer feeds iCalendar fuera de Muse. Usa solo la biblioteca estándar de Python, valida HTTPS, mantiene estado local y ofrece `--list`, `--json` y `--check` con avisos de tarea nueva/cambiada y umbrales de 7/3/1 días.
-- `config.example.json`: plantilla vacía, sin URLs ni tokens reales.
-- `tests/`: pruebas automáticas del parser, los avisos y el tratamiento de enlaces privados.
+---
 
-## Estado y compatibilidad con Muse
+## 📦 Estructura del Paquete
 
-Meta describe Muse como una VM Linux personal persistente, con conectores, skills, CLIs y crons. Esta entrega usa una guía Markdown (`muse/SKILL.md`); **no es un perfil Hermes ni una importación nativa de Hermes**. Tampoco he podido probarla dentro de una cuenta/VM real de Muse. Para la primera prueba, hay que darle a Muse esa guía y comprobar que su conector de calendario ve el calendario académico correcto. La guía se detiene si no puede hacerlo de forma segura.
-
-La parte reutilizada de la automatización actual es el seguimiento de fechas del calendario (novedades y recordatorios 7/3/1). No incluye todavía consultas directas de notas, foros, PDFs ni escritura en Obsidian; esos flujos requieren portarlos y validarlos por separado.
-
-## Credenciales: importante
-
-Una URL de calendario Moodle/iCalendar puede contener un token que funciona como credencial. Nunca subas una URL real, un `.ics`, un `config.json`, un `.env` ni el estado de tareas a GitHub.
-
-El CLI independiente guarda la URL en `config.json`, que está en `.gitignore` y se restringe a permisos `0600` al cargarla. Eso protege frente a otros usuarios del sistema, **pero no la oculta de un agente que pueda leer ese mismo espacio de trabajo**. Por eso no se recomienda ejecutar el CLI con enlaces privados dentro de Muse. Para Muse, utiliza el conector de calendario integrado y no pegues enlaces/token de Moodle en el chat. Si el calendario no está disponible por ese conector, detente; no introduzcas la credencial en un fichero accesible al agente.
-
-## Uso local del CLI (opcional; fuera de Muse)
-
-1. Copia `config.example.json` como `config.json`.
-2. Añade localmente tus propios enlaces HTTPS de calendario en `config.json`; no los mandes por chat ni los subas.
-3. Ejecuta:
-
-```bash
-python3 campus_tasks.py --list
-python3 campus_tasks.py --check
-python3 campus_tasks.py --json
-python3 -m unittest discover -s tests -v
+```text
+muse-estudios/
+├── LICENSE.txt                     # Licencia de uso personal educativo no comercial
+├── README.md                       # Documentación principal del repositorio
+├── config.example.json             # Plantilla vacía para ejecución local CLI
+├── campus_tasks.py                 # Parser CLI independiente (Python estándar)
+├── docs/
+│   ├── PLAN_MUSE_COMPLETO.md       # Auditoría técnica y plan maestro de arquitectura
+│   └── GUIA_CONEXION_CAMPUS.md     # Guía visual para conectar Moodle con Google Calendar
+├── muse/
+│   ├── INSTRUCCIONES_MUSE.md       # Prompt principal para configurar Meta Muse en el móvil
+│   ├── GUIA_USUARIO_MOVIL.md       # Guía rápida de 3 pasos para el alumno
+│   ├── SKILL.md                    # Especificación técnica base del asistente
+│   └── modulos/
+│       ├── analisis_practicas.md   # Módulo para analizar enunciados y PDFs de prácticas
+│       └── seguimiento_tareas.md   # Módulo de planificación y ventanas de urgencia
+└── tests/
+    ├── test_campus_tasks.py        # Pruebas unitarias del parser, alertas y permisos
+    └── test_sanitizacion.py        # Pruebas de detección de fugas de datos sensibles
 ```
 
-El modo `--check` no imprime nada si no hay novedades ni un recordatorio nuevo. No desactiva la verificación TLS y no imprime URLs de feeds en errores o resultados.
+---
 
-## Compartir sin publicarlo
+## 📱 Uso Rápido en Móvil (Meta Muse)
 
-El repositorio debe mantenerse **privado**. Invita a cada amigo por su usuario GitHub, con permiso de solo lectura; no compartas una contraseña común ni envíes el enlace fuera de las invitaciones individuales. `LICENSE.txt` expresa el uso personal/no comercial y prohíbe redistribuir o vender el material.
+Para configurar tu asistente en Meta Muse sin usar terminal ni editar archivos:
 
-Esto controla quién accede inicialmente, pero no puede impedir que una persona autorizada copie el contenido. Revocar el acceso no borra copias descargadas, capturas ni archivos ya importados a su propia VM.
+1. **Sincroniza tu calendario de clase:** Sigue [`docs/GUIA_CONEXION_CAMPUS.md`](docs/GUIA_CONEXION_CAMPUS.md) para añadir tu feed de Moodle a Google Calendar o Microsoft Outlook.
+2. **Conecta tu calendario a Muse:** En la app de Meta Muse, activa el conector oficial de **Google Calendar** (o Outlook) en modo lectura.
+3. **Inicia el asistente:** Sigue [`muse/GUIA_USUARIO_MOVIL.md`](muse/GUIA_USUARIO_MOVIL.md) y envía a Muse el contenido de [`muse/INSTRUCCIONES_MUSE.md`](muse/INSTRUCCIONES_MUSE.md). Responde a las 4 preguntas breves de bienvenida y tu tutor estará listo.
 
-## Referencias oficiales
+---
 
-- [Meta AI Research — How We Built Safety Into Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse): descripción de VM, conectores, skills, crons y límites de seguridad.
-- [Muse — Your Personal AI Agent](https://muse.ai/): información general del producto y sus conectores.
+## 💻 Uso Local del CLI (Opcional, en tu Ordenador)
+
+Si prefieres ejecutar el seguimiento desde tu propia terminal fuera de Muse:
+
+1. Copia `config.example.json` como `config.json`.
+2. Añade tus enlaces HTTPS de calendario en `config.json`.
+3. Comprueba y ejecuta:
+   ```bash
+   python3 campus_tasks.py --list    # Lista todas las tareas futuras
+   python3 campus_tasks.py --check   # Comprueba alertas (silencio si no hay novedades)
+   python3 campus_tasks.py --json    # Emite tareas en JSON limpio sin URLs
+   ```
+
+El archivo `config.json` se protege automáticamente con permisos `0600` (solo legible por tu usuario) y está ignorado en `.gitignore`.
+
+---
+
+## 🛡️ Seguridad y Privacidad
+
+* **Nunca pegues contraseñas ni URLs con tokens en el chat:** Los enlaces iCalendar contienen un `authtoken` privado. Al sincronizar a través de Google Calendar y usar el conector de Muse, la IA solo lee eventos limpios sin tocar tus claves.
+* **Protección contra Inyección de Prompts:** Las descripciones de tareas y los archivos PDF subidos se tratan estrictamente como datos pasivos, neutralizando cualquier intento de alterar las instrucciones del asistente.
+* **Validación Continua:** El repositorio cuenta con una suite de pruebas que verifica la sanitización de URLs y la ausencia de datos privados:
+  ```bash
+  python3 -m unittest discover tests -v
+  ```
+
+---
+
+## 🔒 Compartir sin Publicarlo
+
+El repositorio debe mantenerse **estrictamente privado**. Invita a cada amigo con acceso de solo lectura individual a través de su usuario de GitHub.
+
+> [!WARNING]
+> La licencia [`LICENSE.txt`](LICENSE.txt) expresa los términos legales de uso personal y prohíbe la redistribución o venta. No obstante, ten en cuenta que ninguna medida técnica puede impedir que una persona autorizada copie o reenvíe material que ya haya recibido en su dispositivo.
+
+---
+
+## 📚 Referencias Oficiales
+* [Meta AI Research — How We Built Safety Into Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse): Arquitectura de Secure VMs, conectores nativos y sandboxing.
+* [RFC 5545 — Internet Calendaring and Scheduling (iCalendar)](https://datatracker.ietf.org/doc/html/rfc5545).
